@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -26,12 +28,14 @@ import frc.robot.subsystems.HubSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOADIS;
+import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.superstructure.Superstructure;
 import frc.robot.subsystems.superstructure.SuperstructureIO;
 import frc.robot.subsystems.superstructure.SuperstructureIOSim;
+import frc.robot.subsystems.superstructure.SuperstructureIOSpark;
 import frc.robot.subsystems.superstructure.SuperstructureIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -42,6 +46,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+  private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
   // Subsystems
   private final Drive drive;
   private final Superstructure superstructure;
@@ -61,10 +68,10 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcoder
-        superstructure = new Superstructure(new SuperstructureIOTalonFX());
+        superstructure = new Superstructure(new SuperstructureIOSpark());
         drive =
             new Drive(
-                new GyroIOADIS(),
+                new GyroIOPigeon2(),
                 new ModuleIOTalonFX(TunerConstants.FrontLeft),
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
@@ -161,6 +168,14 @@ public class RobotContainer {
             () -> -P1Controller.getLeftY(),
             () -> -P1Controller.getLeftX(),
             () -> -P1Controller.getRightX()));
+      
+    // Slow down to a % of speed when right bumper is held
+    P1Controller.rightBumper().whileTrue(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> (-P1Controller.getLeftY() * MaxSpeed * 0.5),
+            () -> (-P1Controller.getLeftX() * MaxSpeed * 0.5),
+            () -> (-P1Controller.getRightX() * MaxAngularRate * 0.75)));
 
     // Lock to 0° when A button is held
     P1Controller.a()
@@ -188,13 +203,13 @@ public class RobotContainer {
   // Operator Stuff ---------------------------------------------------------------------------------------------------------
 
   // Intake 
-  P2Controller.a().whileTrue(Commands.run(() -> superstructure.intake()));
+  P2Controller.a().whileTrue(superstructure.intake());
 
   // Shoot
-  P2Controller.b().whileTrue(Commands.run(() -> superstructure.launch()));
+  P2Controller.b().whileTrue(superstructure.launch());
 
   // Eject
-  P2Controller.x().whileTrue(Commands.run(() -> superstructure.eject()));
+  P2Controller.x().whileTrue(superstructure.eject());
 
   }
   /**
