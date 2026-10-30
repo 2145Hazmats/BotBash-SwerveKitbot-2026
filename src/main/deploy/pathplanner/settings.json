@@ -5,13 +5,11 @@
   "pathFolders": [
     "Left",
     "Middle",
-    "WIP",
     "Right"
   ],
   "autoFolders": [
     "Left",
     "Middle",
-    "WIP",
     "Right"
   ],
   "defaultMaxVel": 3.0,
