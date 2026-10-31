@@ -203,13 +203,13 @@ public class RobotContainer {
   // Operator Stuff ---------------------------------------------------------------------------------------------------------
 
   // Intake 
-  P2Controller.a().whileTrue(superstructure.intake());
+  P2Controller.povDown().whileTrue(superstructure.intake());
 
   // Shoot
-  P2Controller.b().whileTrue(superstructure.launch());
+  P2Controller.rightTrigger().whileTrue(superstructure.launch());
 
   // Eject
-  P2Controller.y().whileTrue(superstructure.eject());
+  P2Controller.leftBumper().whileTrue(superstructure.eject());
 
   }
   /**
