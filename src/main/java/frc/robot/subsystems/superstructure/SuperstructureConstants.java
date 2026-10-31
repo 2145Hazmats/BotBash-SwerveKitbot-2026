@@ -18,8 +18,8 @@ public class SuperstructureConstants {
 
   public static final double intakingFeederVoltage = 12.0;
   public static final double intakingIntakeVoltage = -10.0;
-  public static final double launchingFeederVoltage = -7.5;
-  public static final double launchingLauncherVoltage = -7.5;
+  public static final double launchingFeederVoltage = -6.5;
+  public static final double launchingLauncherVoltage = -6.5;
   public static final double spinUpFeederVoltage = 6.0;
   public static final double spinUpSeconds = 0.5;
 }

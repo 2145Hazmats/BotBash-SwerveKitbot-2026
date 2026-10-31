@@ -173,9 +173,9 @@ public class RobotContainer {
     P1Controller.rightBumper().whileTrue(
         DriveCommands.joystickDrive(
             drive,
-            () -> (-P1Controller.getLeftY() * MaxSpeed * 0.5),
-            () -> (-P1Controller.getLeftX() * MaxSpeed * 0.5),
-            () -> (-P1Controller.getRightX() * MaxAngularRate * 0.75)));
+            () -> (-P1Controller.getLeftY() * 0.5),
+            () -> (-P1Controller.getLeftX() * 0.5),
+            () -> (-P1Controller.getRightX() * 0.75)));
 
     // Lock to 0° when A button is held
     P1Controller.a()
@@ -209,7 +209,7 @@ public class RobotContainer {
   P2Controller.b().whileTrue(superstructure.launch());
 
   // Eject
-  P2Controller.x().whileTrue(superstructure.eject());
+  P2Controller.y().whileTrue(superstructure.eject());
 
   }
   /**
